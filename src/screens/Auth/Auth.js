@@ -66,7 +66,9 @@ class AuthScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.onAutoSignIn()
+    this.props.onAutoSignIn().then(() => {
+      this.props.navigation.navigate('Dashboard')
+    })
   }
 
   switchAuthModeHandler = () => {
@@ -89,7 +91,8 @@ class AuthScreen extends Component {
       password: this.state.controls.password.value
     };
     this.props.onTryAuth(authData, this.state.authMode).then(() => {
-      this.props.navigation.navigate('SideDrawer')
+      // this.props.navigation.navigate('SideDrawer')
+      this.props.navigation.navigate('Dashboard')
     })
   };
 
