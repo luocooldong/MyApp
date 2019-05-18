@@ -23,8 +23,13 @@ import backgroundImage from "../../assets/background.jpg";
 import validate from "../../utility/validation";
 import { tryAuth, authAutoSignIn } from "../../store/actions/index";
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-community/async-storage'
 
 class AuthScreen extends Component {
+  static navigationOptions = {
+    title: 'Please sign in',
+  };
+
   state = {
     viewMode: Dimensions.get("window").height > 500 ? "portrait" : "landscape",
     authMode: "login",
@@ -142,6 +147,12 @@ class AuthScreen extends Component {
     });
   };
 
+  // directly loggedin
+  _signInAsync = async () => {
+    await AsyncStorage.setItem('userToken', 'abc');
+    this.props.navigation.navigate('App');
+  };
+
   render() {
     let headingText = null;
     let confirmPasswordControl = null;
@@ -195,6 +206,7 @@ class AuthScreen extends Component {
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           {headingText}
+          <Button title="直接点击登陆!" onPress={this._signInAsync} />          
           <ButtonWithBackground
             color="#29aaf4"
             onPress={this.switchAuthModeHandler}

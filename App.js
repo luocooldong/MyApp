@@ -1,6 +1,7 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Auth from './src/screens/Auth/Auth'
 import {
   ActivityIndicator,
   Button,
@@ -213,7 +214,8 @@ const DashboardTabNavigator = createBottomTabNavigator(
 )
 
 
-const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+// const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+const AuthStack = createStackNavigator({ SignIn: Auth });
 
 export default createAppContainer(createSwitchNavigator(
   {
