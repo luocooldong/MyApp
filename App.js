@@ -31,9 +31,9 @@ class SignInScreen extends React.Component {
 }
 
 class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome to the app!',
-  };
+  // static navigationOptions = {
+  //   title: 'Welcome to the app!',
+  // };
 
   render() {
     return (
@@ -161,7 +161,6 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   if (routeName === 'Home') {
     iconName = `ios-information-circle${focused ? '' : '-outline'}`;
     // We want to add badges to home tab icon
-    IconComponent = HomeIconWithBadge;
   } else if (routeName === 'Settings') {
     iconName = `ios-options${focused ? '' : '-outline'}`;
   }
@@ -176,6 +175,26 @@ const DashboardTabNavigator = createBottomTabNavigator(
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },
   },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state;
+        debugger
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Settings') {
+          iconName = `ios-options${focused ? '' : '-outline'}`;
+        }
+        return <Ionicons name={iconName} size={25} color={tintColor} />
+      }
+        // getTabBarIcon(navigation, focused, tintColor),
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    },
+  }
   // {
   //   defaultNavigationOptions: ({ navigation }) => ({
   //     tabBarIcon: ({ focused, tintColor }) =>
