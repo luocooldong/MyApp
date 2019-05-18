@@ -175,7 +175,17 @@ const DashboardTabNavigator = createBottomTabNavigator(
   {
     Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },
-  }
+  },
+  // {
+  //   defaultNavigationOptions: ({ navigation }) => ({
+  //     tabBarIcon: ({ focused, tintColor }) =>
+  //       getTabBarIcon(navigation, focused, tintColor),
+  //   }),
+  //   tabBarOptions: {
+  //     activeTintColor: 'tomato',
+  //     inactiveTintColor: 'gray',
+  //   },
+  // }
 )
 
 const AppStack = createStackNavigator({ Home: HomeScreen });
@@ -191,7 +201,7 @@ const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
-    App: AppStack,
+    App: DashboardTabNavigator,
     Auth: AuthStack,
   },
   {
