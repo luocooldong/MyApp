@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
-import { Ionicons } from 'react-native-vector-icons'; 
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   ActivityIndicator,
   Button,
@@ -31,9 +31,9 @@ class SignInScreen extends React.Component {
 }
 
 class HomeScreen extends React.Component {
-  // static navigationOptions = {
-  //   title: 'Welcome to the app!',
-  // };
+  static navigationOptions = {
+    title: 'Welcome to the app!',
+  };
 
   render() {
     return (
@@ -52,6 +52,19 @@ class HomeScreen extends React.Component {
     await AsyncStorage.clear();
     this.props.navigation.navigate('Auth');
   };
+}
+
+class SettingsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Settings',
+  };
+  render() {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Settings!</Text>
+      </View>
+    );
+  }
 }
 
 class OtherScreen extends React.Component {
@@ -108,15 +121,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class SettingsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-}
+
 
 class IconWithBadge extends React.Component {
   render() {
@@ -161,59 +166,38 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   if (routeName === 'Home') {
     iconName = `ios-information-circle${focused ? '' : '-outline'}`;
     // We want to add badges to home tab icon
+    IconComponent = HomeIconWithBadge;
   } else if (routeName === 'Settings') {
-    iconName = `ios-options${focused ? '' : '-outline'}`;
+    iconName = `ios-options${focused ? '' : ''}`;
   }
-
   // You can return any component that you like here!
   return <IconComponent name={iconName} size={25} color={tintColor} />;
-};
-
+}
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
-    Home: { screen: HomeScreen },
     Settings: { screen: SettingsScreen },
+    Home: { screen: HomeScreen },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        debugger
-        let iconName;
-        if (routeName === 'Home') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Settings') {
-          iconName = `ios-options${focused ? '' : '-outline'}`;
-        }
-        return <Ionicons name={iconName} size={25} color={tintColor} />
-      }
-        // getTabBarIcon(navigation, focused, tintColor),
+      tabBarIcon: ({ focused, tintColor }) =>
+        getTabBarIcon(navigation, focused, tintColor),
     }),
     tabBarOptions: {
       activeTintColor: 'tomato',
       inactiveTintColor: 'gray',
     },
   }
-  // {
-  //   defaultNavigationOptions: ({ navigation }) => ({
-  //     tabBarIcon: ({ focused, tintColor }) =>
-  //       getTabBarIcon(navigation, focused, tintColor),
-  //   }),
-  //   tabBarOptions: {
-  //     activeTintColor: 'tomato',
-  //     inactiveTintColor: 'gray',
-  //   },
-  // }
 )
 
-const AppStack = createStackNavigator({ Home: HomeScreen });
+// const AppStack = createStackNavigator({ Home: HomeScreen });
 
-const AppDrawerNavigator = createDrawerNavigator({
-  Dashboard: {
-    screen: AppStack
-  }
-});
+// const AppDrawerNavigator = createDrawerNavigator({
+//   Dashboard: {
+//     screen: AppStack
+//   }
+// });
 
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
