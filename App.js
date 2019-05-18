@@ -174,10 +174,31 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   return <IconComponent name={iconName} size={25} color={tintColor} />;
 }
 
+
+const AppStack = createStackNavigator(
+  { Home: HomeScreen, Other: OtherScreen },
+  {
+    defaultNavigationOptions: ({ navigation }) => {
+      return {
+        headerLeft: (
+          <Ionicons style={{ paddingLeft: 10 }} onPress={() => navigation.openDrawer()} name="md-menu" size={30} />
+        )
+      };
+    }
+  });
+
+
+const AppDrawerNavigator = createDrawerNavigator({
+  Dashboard: {
+    screen: AppStack
+  }
+});
+
+
 const DashboardTabNavigator = createBottomTabNavigator(
   {
+    Home: { screen: AppDrawerNavigator },
     Settings: { screen: SettingsScreen },
-    Home: { screen: HomeScreen },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -191,13 +212,6 @@ const DashboardTabNavigator = createBottomTabNavigator(
   }
 )
 
-// const AppStack = createStackNavigator({ Home: HomeScreen });
-
-// const AppDrawerNavigator = createDrawerNavigator({
-//   Dashboard: {
-//     screen: AppStack
-//   }
-// });
 
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
