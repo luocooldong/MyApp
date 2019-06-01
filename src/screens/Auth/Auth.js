@@ -167,7 +167,7 @@ class AuthScreen extends Component {
           !this.state.controls.password.valid
         }
       >
-        Submit 
+        Submit
       </ButtonWithBackground>
     );
 
@@ -186,7 +186,7 @@ class AuthScreen extends Component {
               ? styles.portraitPasswordWrapper
               : styles.landscapePasswordWrapper
           }
-        >         
+        >
           <DefaultInput
             placeholder="Confirm Password"
             style={styles.input}
@@ -206,7 +206,7 @@ class AuthScreen extends Component {
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           {headingText}
-          <Button title="直接点击登陆!" onPress={this._signInAsync} />          
+          <Button title="directly logged in!" onPress={this._signInAsync} />
           <ButtonWithBackground
             color="#29aaf4"
             onPress={this.switchAuthModeHandler}

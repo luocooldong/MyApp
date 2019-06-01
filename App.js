@@ -1,7 +1,7 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Auth from './src/screens/Auth/Auth'
+
 import {
   ActivityIndicator,
   Button,
@@ -12,81 +12,13 @@ import {
 } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator, createDrawerNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 
-class SignInScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Please sign in',
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Button title="Sign in!" onPress={this._signInAsync} />
-      </View>
-    );
-  }
-
-  _signInAsync = async () => {
-    await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
-  };
-}
-
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome to the app!',
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Button title="Show me more of the app" onPress={this._showMoreApp} />
-        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
-      </View>
-    );
-  }
-
-  _showMoreApp = () => {
-    this.props.navigation.navigate('Other');
-  };
-
-  _signOutAsync = async () => {
-    await AsyncStorage.clear();
-    this.props.navigation.navigate('Auth');
-  };
-}
-
-class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Settings',
-  };
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-}
-
-class OtherScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Lots of features here',
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
-        <StatusBar barStyle="default" />
-      </View>
-    );
-  }
-
-  _signOutAsync = async () => {
-    await AsyncStorage.clear();
-    this.props.navigation.navigate('Auth');
-  };
-}
+/**
+ *  import custom components
+ */
+import Auth from './src/screens/Auth/Auth'
+import SettingsScreen from './src/screens/Settings/Settings'
+import HomeScreen from './src/screens/HomeModule/Home'
+import OtherScreen from './src/screens/HomeModule/Other/Other'
 
 class AuthLoadingScreen extends React.Component {
   constructor() {
@@ -122,8 +54,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 class IconWithBadge extends React.Component {
   render() {
     const { name, badgeCount, color, size } = this.props;
@@ -157,7 +87,7 @@ class IconWithBadge extends React.Component {
 
 const HomeIconWithBadge = props => {
   // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
-  return <IconWithBadge {...props} badgeCount={3} />;
+  return <IconWithBadge {...props} badgeCount={0} />;
 };
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
@@ -165,7 +95,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   let IconComponent = Ionicons;
   let iconName;
   if (routeName === 'Home') {
-    iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+    // iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+    iconName = `md-home`;
     // We want to add badges to home tab icon
     IconComponent = HomeIconWithBadge;
   } else if (routeName === 'Settings') {
@@ -175,9 +106,21 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   return <IconComponent name={iconName} size={25} color={tintColor} />;
 }
 
-
+/*
+ * AppStack Start
+ */
 const AppStack = createStackNavigator(
-  { Home: HomeScreen, Other: OtherScreen },
+  { Home: HomeScreen, Other: {
+      screen: OtherScreen,
+      navigationOptions: ({ navigation }) => {
+        return {
+          headerLeft: (
+            <Ionicons style={{ paddingLeft: 10 }} onPress={() => navigation.navigate('Home')} name="ios-arrow-back" size={30} />
+          )
+        };
+      }
+    }
+  },
   {
     defaultNavigationOptions: ({ navigation }) => {
       return {
@@ -186,20 +129,52 @@ const AppStack = createStackNavigator(
         )
       };
     }
-  });
+  }
+);
 
 
 const AppDrawerNavigator = createDrawerNavigator({
   Dashboard: {
-    screen: AppStack
+    screen: AppStack,
+    navigationOptions: {
+      drawerLabel: 'Dashboard-World',
+      drawerIcon: () => (
+        <Ionicons name="ios-card" size={30} />
+      ),
+    }
+  },
+  Personal: {
+    screen: AppStack,
+    navigationOptions: {
+      drawerLabel: 'Personl-Space',
+      drawerIcon: () => (
+        <Ionicons name="ios-person" size={30} />
+      ),
+    }
+  }
+},{
+  contentOptions: {
+    activeTintColor: '#e91e63',
+    itemsContainerStyle: {
+      marginVertical: 0,
+    },
+    iconContainerStyle: {
+      opacity: 1
+    },
+
   }
 });
 
+const SettingsStack = createStackNavigator(
+  {
+    Settings: SettingsScreen
+  }
+)
 
 const DashboardTabNavigator = createBottomTabNavigator(
   {
     Home: { screen: AppDrawerNavigator },
-    Settings: { screen: SettingsScreen },
+    Settings: { screen: SettingsStack },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -213,8 +188,6 @@ const DashboardTabNavigator = createBottomTabNavigator(
   }
 )
 
-
-// const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 const AuthStack = createStackNavigator({ SignIn: Auth });
 
 export default createAppContainer(createSwitchNavigator(
